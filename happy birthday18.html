@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>生日快乐胡皓童！</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: '华文行楷', cursive;
+        }
+
+        #birthday-text {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3.5em;
+            text-align: center;
+            animation: float 3s ease-in-out infinite;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #ffe66d, #ff6b6b);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            z-index: 2;
+        }
+
+        #cake-container {
+            position: fixed;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        #birthday-cake {
+            width: 400px;
+            filter: drop-shadow(0 0 20px #ffd700);
+            animation: cakeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, 0px); }
+            50% { transform: translate(-50%, -20px); }
+        }
+
+        @keyframes cakeGlow {
+            from { filter: drop-shadow(0 0 20px #ffd700); }
+            to { filter: drop-shadow(0 0 40px #ff69b4); }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="birthday-text">胡皓童生日快乐，永远18耶耶耶耶!!!</div>
+    
+    <div id="cake-container">
+        < img id="birthday-cake" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587" alt="生日蛋糕">
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <script>
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.alpha = 1;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
+                };
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        let particles = [];
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                if (particle.alpha > 0) {
+                    particle.draw();
+                    particle.update();
+                } else {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (Math.random() < 0.05) createFirework();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
