@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quadratic Equation Solver</title>
+</head>
+<body>
+    <script>
+        // Get coefficients from user
+        var a = prompt("Enter coefficient a (a > 0):");
+        var b = prompt("Enter coefficient b:");
+        var c = prompt("Enter coefficient c:");
+
+        // Convert to numbers
+        a = parseFloat(a);
+        b = parseFloat(b);
+        c = parseFloat(c);
+
+        // Calculate discriminant
+        var delta = b * b - 4 * a * c;
+
+        // Calculate roots
+        var x1 = (-b + Math.sqrt(delta)) / (2 * a);
+        var x2 = (-b - Math.sqrt(delta)) / (2 * a);
+
+        // Show results
+        alert("The solutions are:\nx1 = " + x1 + "\nx2 = " + x2);
+        console.log("Quadratic equation solutions:");
+        console.log("x1 =", x1);
+        console.log("x2 =", x2);
+    </script>
+</body>
+</html>
