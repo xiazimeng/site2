@@ -1,0 +1,98 @@
+OOP 面对对象 物件导向的
+literal 
+var 概念={id:"abc";age:1,}
+var student = { id:"d100570";
+
+a = object create(concrete)
+
+function Student(i,n,a)
+{
+this.id = i; //attribute 特性
+this.method  = function(){}
+...
+}
+
+let s = new student("D100205");
+     b = new student(".......");
+
+student.prototype.methodz= function()
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>100,000 Balloons (Faster Speed)</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const CANVAS_WIDTH = window.innerWidth;
+        const CANVAS_HEIGHT = window.innerHeight;
+        const NUM_BALLOONS = 100000;
+        const MIN_SIZE = 10;
+        const MAX_SIZE = 50;
+        const SIZE_CHANGE_RANGE = 2; // 大小变化幅度（可保持不变）
+
+        // 气球属性：{ x, y, size, speed, r, g, b }
+        function createBalloon() {
+            return {
+                x: Math.random() * CANVAS_WIDTH,
+                y: CANVAS_HEIGHT, // 从底部开始
+                size: Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE,
+                // 重点：**加快速度**，速度范围从 3-10px/帧（比原来快 3-4 倍）
+                speed: Math.random() * 7 + 3, // 3（最小值）到 10（最大值）
+                r: Math.floor(Math.random() * 256),
+                g: Math.floor(Math.random() * 256),
+                b: Math.floor(Math.random() * 256)
+            };
+        }
+
+        const balloons = Array.from({ length: NUM_BALLOONS }, createBalloon);
+        const canvas = document.getElementById('canvas');
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+        const ctx = canvas.getContext('2d');
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            balloons.forEach(balloon => {
+                // 向上移动（速度由 speed 控制）
+                balloon.y -= balloon.speed;
+
+                // 重置：当气球完全飞出顶部时（y < -size）
+                if (balloon.y < -balloon.size) {
+                    Object.assign(balloon, createBalloon()); // 重置为新属性（包括新速度）
+                }
+
+                // 随机调整大小（保持不变）
+                balloon.size = Math.max(
+                    MIN_SIZE,
+                    Math.min(MAX_SIZE, balloon.size + (Math.random() * 2 - 1) * SIZE_CHANGE_RANGE)
+                );
+
+                // 随机变色（10% 概率，保持不变）
+                if (Math.random() < 0.1) {
+                    balloon.r = Math.floor(Math.random() * 256);
+                    balloon.g = Math.floor(Math.random() * 256);
+                    balloon.b = Math.floor(Math.random() * 256);
+                }
+
+                // 绘制气球
+                ctx.fillStyle = `rgb(${balloon.r}, ${balloon.g}, ${balloon.b})`;
+                ctx.beginPath();
+                ctx.arc(balloon.x, balloon.y, balloon.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        animate();
+    </script>
+</body>
+</html>
