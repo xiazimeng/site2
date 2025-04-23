@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Balloons</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="800" height="600"></canvas>
+  <script>
+    // Balloon class
+    class Balloon {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 10 + 5;  // Random radius between 5 and 15
+        this.dx = (Math.random() - 0.5) * 2;  // Random horizontal speed
+        this.dy = -(Math.random() * 2 + 1);  // Random upward speed
+        this.color = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+      }
+
+      update() {
+        this.x += this.dx;
+        this.y += this.dy;
+
+        // Bounce off the walls
+        if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
+          this.dx = -this.dx;
+        }
+        if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
+          this.dy = -this.dy;
+        }
+
+        // Randomly change size and color over time
+        if (Math.random() < 0.01) {
+          this.radius = Math.max(5, Math.min(15, this.radius + (Math.random() - 0.5) * 2));
+          this.color = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+        }
+      }
+
+      draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const numBalloons = 100000;
+    const balloons = [];
+
+    for (let i = 0; i < numBalloons; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      balloons.push(new Balloon(x, y));
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      balloons.forEach(balloon => {
+        balloon.update();
+        balloon.draw(ctx);
+      });
+    }
+
+    animate();
+  </script>
+</body>
+
+</html>
