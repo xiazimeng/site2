@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flying Balloons</title>
+    <style>
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const COLORS = ['red', 'orange', 'yellow', 'green', 'black', 'blue', 'purple'];
+        const BALLOON_COUNT = 100000;
+        const INITIAL_DIAMETER = 20;
+        const GROWTH_FACTOR = 0.05; // Adjust size growth rate
+
+        let balloons = [];
+
+        class Balloon {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height; // Start at bottom
+                this.dx = (Math.random() - 0.5) * 2; // Random horizontal speed
+                this.dy = -2 - Math.random() * 3; // Upward speed (negative y direction)
+                this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                this.initialDiameter = INITIAL_DIAMETER;
+                this.burstY = Math.random() * canvas.height; // Random burst altitude
+            }
+
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+                
+                // Keep within canvas boundaries (horizontal)
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+            }
+
+            get diameter() {
+                // Diameter increases as it rises (lower y = higher altitude)
+                return this.initialDiameter + (canvas.height - this.y) * GROWTH_FACTOR;
+            }
+
+            isBurst() {
+                return this.y <= this.burstY; // Burst when reaching random altitude
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.diameter / 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize balloons
+        for (let i = 0; i < BALLOON_COUNT; i++) {
+            balloons.push(new Balloon());
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and filter balloons
+            balloons = balloons.filter(balloon => {
+                if (!balloon.isBurst()) {
+                    balloon.update();
+                    balloon.draw();
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        animate();
+    </script>
+</body>
+</html>
