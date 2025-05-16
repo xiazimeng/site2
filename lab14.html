@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click Coordinates</title>
+    <style>
+        body { padding: 20px; }
+        #clickArea {
+            width: 400px;
+            height: 300px;
+            background: #f0f0f0;
+            border: 2px dashed #666;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <h2>4. 点击坐标检测</h2>
+    <div id="clickArea">点击此区域</div>
+    <p>坐标：<span id="coords">(尚未点击)</span></p >
+
+    <script>
+        document.getElementById('clickArea').addEventListener('click', function(e) {
+            const x = e.offsetX;
+            const y = e.offsetY;
+            document.getElementById('coords').textContent = `X: ${x}px, Y: ${y}px`;
+        });
+    </script>
+</body>
+</html>

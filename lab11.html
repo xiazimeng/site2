@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Viewer</title>
+    <style>
+        body { padding: 20px; }
+        img { max-width: 500px; margin-top: 10px; border: 2px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2>1. 图片查看器</h2>
+    <input type="file" id="imageInput" accept="image/*">
+    <br>
+    < img id="preview">
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

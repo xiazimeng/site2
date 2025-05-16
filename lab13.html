@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV Viewer</title>
+    <style>
+        body { padding: 20px; }
+        table { border-collapse: collapse; margin-top: 10px; }
+        td, th { border: 1px solid #999; padding: 8px; }
+        th { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>3. CSV 表格查看器</h2>
+    <input type="file" id="csvInput" accept=".csv">
+    <div id="tableContainer"></div>
+
+    <script>
+        document.getElementById('csvInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n').filter(line => line.trim() !== '');
+                    const table = document.createElement('table');
+                    
+                    lines.forEach((line, index) => {
+                        const tr = document.createElement('tr');
+                        line.split(',').forEach(cell => {
+                            const td = document.createElement(index === 0 ? 'th' : 'td');
+                            td.textContent = cell.trim();
+                            tr.appendChild(td);
+                        });
+                        table.appendChild(tr);
+                    });
+                    
+                    document.getElementById('tableContainer').replaceChildren(table);
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>
