@@ -1,0 +1,96 @@
+from flask import Flask, request, render_template_string
+import random
+import string
+import os
+
+app = Flask(__name__)
+
+# HTML templates
+CODES_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Codes</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attendance Codes</h1>
+    <table>
+        {% for row in codes %}
+        <tr>
+            {% for code in row %}
+            <td>{{ code }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+"""
+
+SIGNIN_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Sign In</title>
+</head>
+<body>
+    <h1>Student Sign In</h1>
+    <form method="post" action="/verify">
+        <label for="sid">Student ID:</label>
+        <input type="text" id="sid" name="sid" required><br><br>
+        
+        <label for="code">Sign-in Code:</label>
+        <input type="text" id="code" name="code" required><br><br>
+        
+        <input type="submit" value="Sign in">
+    </form>
+</body>
+</html>
+"""
+
+RESULT_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign In Result</title>
+</head>
+<body>
+    <h1>{{ message }}</h1>
+    Back to Sign In
+</body>
+</html>
+"""
+
+def generate_random_code(length=10):
+    """Generate a random alphanumeric code of given length"""
+    chars = string.ascii_lowercase + string.digits
+    return ''.join(random.choice(chars) for _ in range(length))
+
+def generate_codes_file():
+    """Generate 100 unique codes and save to file"""
+    codes = set()
+    while len(codes) < 100:
+        code = generate_random_code()
+        codes.add(code)
+    
+    # Write to file
+    with open('codes.txt', 'w') as f:
+        for code in codes:
+            f.write(f"{code}\t0\n")
+    
+    return list(codes)
+
+def read_codes_file():
+    """Read codes from file into a dictionary"""
+    if not os.path.exists('codes.
